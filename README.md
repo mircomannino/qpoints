@@ -16,7 +16,7 @@ sudo apt install qemu-user
 To generate ```libbv.so``` and ```libtracer.so``` run the following commands:
 ```bash 
 export QEMU_DIR=/path/to/qemu # default: ./qemu
-export CAPSTONE_DIR=/path/to/qemu # default: ./capstone
+export CAPSTONE_DIR=/path/to/capstone # default: ./capstone
 make
 ```
 
@@ -30,6 +30,12 @@ qemu-riscv64 \
     -plugin ./libbv.so,out_dir=${OUT_DIR},out_name=${OUT_NAME},simpoint_interval=${SIMPOINT_INTERVAL} \
     ./hello \
     -append "input-args"
+```
+Default values are:
+```bash
+OUT_DIR = ./output
+OUT_NAME = simpoint
+SIMPOINT_INTERVAL=100000000 # 100M
 ```
 ---
 ---
