@@ -21,7 +21,7 @@ make
 ```
 
 ## Generate BBV
-BBV file are generated using ```libbbv.so``` plugin. Run the following command to produce BBV file of an application called ```hello``` that takes one input argument:
+BBV files are generated using ```libbbv.so``` plugin. Run the following command to produce the BBV file of an application called ```hello``` that takes one input argument:
 ```bash 
 export OUT_DIR=./output
 export OUT_NAME=hello
@@ -30,12 +30,15 @@ qemu-riscv64 \
     -plugin ./libbv.so,out_dir=${OUT_DIR},out_name=${OUT_NAME},simpoint_interval=${SIMPOINT_INTERVAL} \
     ./hello \
     -append "input-args"
+# Default values are:
+# OUT_DIR = ./output
+# OUT_NAME = simpoint
+# SIMPOINT_INTERVAL=100000000 # 100M
 ```
-Default values are:
-```bash
-OUT_DIR = ./output
-OUT_NAME = simpoint
-SIMPOINT_INTERVAL=100000000 # 100M
+At the end you should find the following files:
+```bash 
+./output/hello.bb.gz
+./output/hello_pc.txt
 ```
 ---
 ---
