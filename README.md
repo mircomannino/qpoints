@@ -26,6 +26,7 @@ BBV files are generated using ```libbbv.so``` plugin. Run the following command 
 export OUT_DIR=./output
 export OUT_NAME=hello
 export SIMPOINT_INTERVAL=100000000 # 100M
+mkdir -p ${OUT_DIR} # output folder should be created if it does not exist
 qemu-riscv64 \
     -plugin ./libbv.so,out_dir=${OUT_DIR},out_name=${OUT_NAME},simpoint_interval=${SIMPOINT_INTERVAL} \
     ./hello \
@@ -38,7 +39,7 @@ qemu-riscv64 \
 At the end you should find the following files:
 ```bash 
 ./output/hello.bb.gz
-./output/hello_pc.txt
+./output/hello.pc.txt
 ```
 ---
 ---
