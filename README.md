@@ -1,7 +1,10 @@
 # New README
 
+This repo is a fork of the repository [qpoints](https://github.com/pranith/qpoints/tree/master).
+the main changes concern the integrations of qemu and capstone dependencies and more flexible handling of input parameters to the plugin
+
 ## Install dependencies
-qpoints requires source code of [QEMU]() and [Capstone Engine](). Run ```install_requirements.sh``` to download them in the current directory.
+qpoints requires source code of [QEMU](https://github.com/qemu/qemu) and [Capstone Engine](https://github.com/capstone-engine/capstone). Run ```install_requirements.sh``` to download them in the current directory.
 ```bash
 chmod u+x ./install_requirements.sh
 ./install_requirements.sh
