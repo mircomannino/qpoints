@@ -1,3 +1,40 @@
+# New README
+
+## Install dependencies
+qpoints requires source code of [QEMU]() and [Capstone Engine](). Run ```install_requirements.sh``` to download them in the current directory.
+```bash
+chmod u+x ./install_requirements.sh
+./install_requirements.sh
+```
+In order to use the generated plugins, install ```qemu-user```: 
+```bash
+sudo apt install qemu-user
+```
+
+
+## Compiling
+To generate ```libbv.so``` and ```libtracer.so``` run the following commands:
+```bash 
+export QEMU_DIR=/path/to/qemu # default: ./qemu
+export CAPSTONE_DIR=/path/to/qemu # default: ./capstone
+make
+```
+
+## Generate BBV
+BBV file are generated using ```libbbv.so``` plugin. Run the following command to produce BBV file of an application called ```hello``` that takes one input argument:
+```bash 
+export OUT_DIR=./output
+export OUT_NAME=hello
+export SIMPOINT_INTERVAL=100000000 # 100M
+qemu-riscv64 \
+    -plugin ./libbv.so,out_dir=${OUT_DIR},out_name=${OUT_NAME},simpoint_interval=${SIMPOINT_INTERVAL} \
+    ./hello \
+    -append "input-args"
+```
+---
+---
+
+# Original README
 # qpoints
 Qemu tracing plugin using SimPoints
 
