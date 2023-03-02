@@ -1,6 +1,9 @@
-QEMU_DIR ?=
+QEMU_DIR ?= ./qemu
+CAPSTONE_DIR ?= ./capstone
 GLIB_INC ?=`pkg-config --cflags glib-2.0`
-CXXFLAGS ?= -g -Wall -std=c++14 -march=native -iquote $(QEMU_DIR)/include/qemu/ $(GLIB_INC) -iquote $(QEMU_DIR)/capstone/include/
+CXXFLAGS ?= -g -Wall -std=c++14 -march=native $(GLIB_INC) \
+	-iquote $(QEMU_DIR)/include/qemu/ \
+	-iquote $(CAPSTONE_DIR)/include
 
 all: libbbv.so libtracer.so
 

@@ -27,8 +27,6 @@ extern "C" {
 #include <glib.h>
 #include <zlib.h>
 
-#define INTERVAL_SIZE 100000000 /* 100M instructions */
-
 QEMU_PLUGIN_EXPORT int qemu_plugin_version = QEMU_PLUGIN_VERSION;
 
 /* Plugins need to take care of their own locking */
@@ -40,6 +38,8 @@ static uint64_t inst_count = 0; /* executed instruction count */
 
 static gzFile bbv_file;
 static std::ofstream pc_file;
+
+static uint64_t SIMPOINT_INTERVAL;
 
 /*
  * Counting Structure
@@ -90,10 +90,13 @@ static void plugin_exit(qemu_plugin_id_t id, void *p)
     pc_file.close();
 }
 
-static void plugin_init(std::string& bench_name)
+static void plugin_init(std::string& out_dir, std::string& out_name,
+    const uint64_t simpoint_interval)
 {
-    std::string bbv_file_name = bench_name + "_bbv.gz";
-    std::string pc_file_name  = bench_name + "_pc.txt";
+    SIMPOINT_INTERVAL = simpoint_interval;
+
+    std::string bbv_file_name = out_dir + "/" + out_name + ".bb.gz";
+    std::string pc_file_name  = out_dir + "/" + out_name + ".pc.txt";
 
     bbv_file = gzopen(bbv_file_name.c_str(), "w");
     pc_file.open(pc_file_name.c_str(), std::ofstream::out);
@@ -106,7 +109,7 @@ static void tb_exec(unsigned int cpu_index, void *udata)
     static int interval_cnt = 0;
 
     lock.lock();
-    if (inst_count >= INTERVAL_SIZE) {
+    if (inst_count >= SIMPOINT_INTERVAL) {
         std::ostringstream bb_stat;
         GList *counts, *it;
         int tb_count = 0;
@@ -185,15 +188,35 @@ static void tb_record(qemu_plugin_id_t id, struct qemu_plugin_tb *tb)
                                          (void *)hash);
 }
 
+void parse_args(int argc, char* argv[], std::string& out_dir, 
+    std::string& out_name, uint64_t& simpoint_interval)
+{
+    // Define defaul values
+    out_dir = "./output";
+    out_name = "simpoint";
+    simpoint_interval = 100000000; // 100M
+
+    for (int i = 0; i < argc; i++) {
+        std::string current_argv = std::string(argv[i]);
+        if (current_argv.find("out_dir=") != std::string::npos)
+            out_dir = current_argv.erase(0, std::string("out_dir").length()+1);
+        if (current_argv.find("out_name=") != std::string::npos)
+            out_name = current_argv.erase(0, std::string("out_name").length()+1);
+        if (current_argv.find("simpoint_interval=") != std::string::npos)
+            simpoint_interval = std::stoi(current_argv.erase(0, std::string("simpoint_interval").length()+1));
+    }
+}
+
 QEMU_PLUGIN_EXPORT
 int qemu_plugin_install(qemu_plugin_id_t id, const qemu_info_t *info,
                         int argc, char **argv)
 {
-    std::string bench_name("trace");
-    if (argc) {
-        bench_name = argv[0];
-    }
-    plugin_init(bench_name);
+    std::string out_dir;
+    std::string out_name;
+    uint64_t simpoint_interval;
+    parse_args(argc, argv, out_dir, out_name, simpoint_interval);
+    
+    plugin_init(out_dir, out_name, simpoint_interval);
 
     qemu_plugin_register_vcpu_tb_trans_cb(id, tb_record);
     qemu_plugin_register_atexit_cb(id, plugin_exit, NULL);
