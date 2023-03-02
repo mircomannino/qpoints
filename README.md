@@ -1,7 +1,7 @@
 # New README
 
 This repo is a fork of the repository [qpoints](https://github.com/pranith/qpoints/tree/master).
-the main changes concern the integrations of qemu and capstone dependencies and more flexible handling of input parameters to the plugin
+The main changes concern the integrations of qemu and capstone dependencies and more flexible handling of input parameters to the plugin
 
 ## Install dependencies
 qpoints requires source code of [QEMU](https://github.com/qemu/qemu) and [Capstone Engine](https://github.com/capstone-engine/capstone). Run ```install_requirements.sh``` to download them in the current directory.
@@ -37,9 +37,9 @@ qemu-riscv64 \
     arg-1 \
     arg-2
 # Default values are:
-# OUT_DIR = ./output
-# OUT_NAME = simpoint
-# SIMPOINT_INTERVAL=100000000 # 100M
+# out_dir: ./output
+# out_name: simpoint
+# simpoint_interval: 100000000 # 100M
 ```
 At the end you should find the following files:
 ```bash 
