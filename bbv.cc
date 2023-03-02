@@ -93,6 +93,11 @@ static void plugin_exit(qemu_plugin_id_t id, void *p)
 static void plugin_init(std::string& out_dir, std::string& out_name,
     const uint64_t simpoint_interval)
 {
+    std::cout << "out_dir: " << out_dir << std::endl;
+    std::cout << "out_name: " << out_name << std::endl;
+    std::cout << "interval: " << simpoint_interval << std::endl;
+
+
     SIMPOINT_INTERVAL = simpoint_interval;
 
     std::string bbv_file_name = out_dir + "/" + out_name + ".bb.gz";
@@ -200,10 +205,18 @@ void parse_args(int argc, char* argv[], std::string& out_dir,
         std::string current_argv = std::string(argv[i]);
         if (current_argv.find("out_dir=") != std::string::npos)
             out_dir = current_argv.erase(0, std::string("out_dir").length()+1);
-        if (current_argv.find("out_name=") != std::string::npos)
+        else if (current_argv.find("out_name=") != std::string::npos)
             out_name = current_argv.erase(0, std::string("out_name").length()+1);
-        if (current_argv.find("simpoint_interval=") != std::string::npos)
+        else if (current_argv.find("simpoint_interval=") != std::string::npos)
             simpoint_interval = std::stoi(current_argv.erase(0, std::string("simpoint_interval").length()+1));
+        else {
+            std::cout << "Invalid arg: " << argv[i] << std::endl;
+            std::cout << "Usage:\n";
+            std::cout << "\tout_dir = /path/to/output/directory\n";
+            std::cout << "\tout_name = <name of the output files>\n";
+            std::cout << "\tsimpoint_interval = <Number of instruction for sampling>\n";
+            exit(1);
+        }
     }
 }
 
