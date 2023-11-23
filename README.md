@@ -38,7 +38,7 @@ qemu-riscv64 \
     arg-2
 # Default values are:
 # out_dir: ./output
-# out_name: simpoint
+# out_name: hello
 # simpoint_interval: 100000000 # 100M
 ```
 At the end you should find the following files:
